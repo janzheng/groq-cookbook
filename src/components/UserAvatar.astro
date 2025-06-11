@@ -1,0 +1,20 @@
+---
+export interface Props {
+  imageUrl?: string; // Made imageUrl optional
+  username: string;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { imageUrl, username, size = 'sm' } = Astro.props;
+
+const sizeClasses = {
+  sm: 'w-6 h-6',
+  md: 'w-8 h-8', 
+  lg: 'w-12 h-12'
+};
+---
+<img 
+  src={imageUrl || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiNkMWQ1ZGIiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjM1IiByPSIxNSIgZmlsbD0iIzk5YTNhZiIvPjxwYXRoIGQ9Ik0yMCA3NWMwLTE2LjU2OSAxMy40MzEtMzAgMzAtMzBzMzAgMTMuNDMxIDMwIDMwIiBmaWxsPSIjOTlhM2FmIi8+PC9zdmc+'} 
+  alt={username}
+  class={`rounded-full bg-gray-200 object-cover ${sizeClasses[size]}`}
+/> 

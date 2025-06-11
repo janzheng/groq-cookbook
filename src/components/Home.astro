@@ -1,0 +1,409 @@
+---
+import groqning from "../assets/groqning.svg";
+import UserByline from "./UserByline.astro";
+import DemoButton from "./DemoButton.astro";
+import FlexButton from "./FlexButton.astro";
+import ExampleCard from "./ExampleCard.astro";
+import ExampleRow from "./ExampleRow.astro";
+
+// Whitelist of sections to display
+const ALLOWED_SECTIONS = ["integration", "streaming"];
+// const ALLOWED_SECTIONS = [];
+
+// Load cookbook examples from API
+const response = await fetch(`${Astro.url.origin}/api/examples`);
+const cookbookExamples = await response.json();
+
+// Filter featured examples
+const featuredExamples = cookbookExamples.filter((example: any) => example.featured);
+
+// Calculate section counts (only for whitelisted sections, or all if whitelist is empty)
+const sectionCounts: Record<string, number> = {};
+cookbookExamples.forEach((example: any) => {
+  example.sections.forEach((section: string) => {
+    if (ALLOWED_SECTIONS.length === 0 || ALLOWED_SECTIONS.includes(section)) {
+      sectionCounts[section] = (sectionCounts[section] || 0) + 1;
+    }
+  });
+});
+
+// Calculate tag counts
+const tagCounts: Record<string, number> = {};
+cookbookExamples.forEach((example: any) => {
+  example.tags.forEach((tag: string) => {
+    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+  });
+});
+---
+
+<div id="container" class="max-w-5xl mx-auto px-4 py-8">
+  <div class="text-center mt-12 mb-6">
+    <div class="flex items-center justify-center">
+      <img src={groqning.src} alt="Groq API Logo" class="w-16 h-16 mx-auto" />
+    </div>
+    <h1 class="text-4xl font-bold text-gray-900 mt-12! mb-4">
+      🧑‍🍳 Cooking with Groq
+    </h1>
+    <p class="text-xl leading-relaxed text-gray-600 max-w-3xl mx-auto">
+      Explore practical examples and tutorials for building with the Groq API.
+      <br />Each example includes source code, documentation, and live demos.
+    </p>
+  </div>
+
+  <!-- Featured Examples -->
+  {featuredExamples.length > 0 && (
+    <div class="mb-16">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-8 text-center">⭐ Featured Recipes</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        {featuredExamples.map((example: any) => (
+          <ExampleCard example={example} />
+        ))}
+      </div>
+    </div>
+  )}
+
+  <!-- Tags -->
+  <div class="mb-12">
+    <h2 class="text-xl font-semibold text-gray-700 mb-6 text-center">
+      Recipes
+    </h2>
+
+    <!-- Sections -->
+    <div class="mb-6">
+      <div class="flex flex-wrap justify-center gap-2">
+        {
+          Object.entries(sectionCounts).map(([section, count]) => (
+            <button
+              class="cursor-pointer px-6 py-1 text-gray-900 hover:text-gray-900 bg-white border hover:border-blue-500 hover:bg-red-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 items-center filter-section"
+              data-section={section}
+            >
+              <span class="text-md font-600 capitalize">{section}</span>
+            </button>
+          ))
+        }
+        <button
+          class="cursor-pointer px-8 py-1 text-gray-900 hover:text-gray-900 bg-white border hover:border-blue-500 hover:bg-red-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 items-center filter-section"
+        >
+          <span class="text-md">All</span>
+          <!-- <span class="text-sm mt-1">{cookbookExamples.length}</span> -->
+        </button>
+      </div>
+    </div>
+    <div id="tags-container" class="flex flex-wrap justify-center gap-3">
+      {
+        Object.entries(tagCounts).map(([tag, count]) => (
+          <button
+            class="cursor-pointer px-4 py-2 bg-gray-100 hover:bg-blue-100 text-gray-700 hover:text-blue-800 rounded-full text-sm font-medium transition-colors duration-200 flex items-center gap-2 filter-tag"
+            data-tag={tag}
+          >
+            <span class="capitalize">{tag}</span>
+            <span class="tag-count bg-white text-gray-600 px-2 py-0.5 rounded-full text-xs">
+              {count}
+            </span>
+          </button>
+        ))
+      }
+      <button
+        class="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 hover:text-white rounded-full text-sm font-medium transition-colors duration-200 flex items-center gap-2 filter-clear filter-clear-tag"
+      >
+        <span>All</span>
+        <span
+          id="all-tags-count"
+          class="bg-white text-gray-700 px-2 py-0.5 rounded-full text-xs"
+          >{cookbookExamples.length}</span
+        >
+      </button>
+    </div>
+  </div>
+
+  <!-- No Results State -->
+  <div id="no-results" class="hidden text-center py-16">
+    <div class="max-w-md mx-auto">
+      <div class="text-6xl mb-4">🔍</div>
+      <h3 class="text-2xl font-semibold text-gray-900 mb-2">
+        No recipes found
+      </h3>
+      <p class="text-gray-600 mb-6">
+        We couldn't find any recipes matching your current filters. Try
+        adjusting your selection or clearing all filters.
+      </p>
+      <button
+        id="clear-all-filters"
+        class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium"
+      >
+        Clear All Filters
+      </button>
+    </div>
+  </div>
+
+  <!-- Examples List (simplified rows) -->
+  <div
+    id="examples-grid"
+    class="bg-white border-gray-200 divide-y divide-gray-100 mb-12"
+  >
+    {cookbookExamples.map((example: any) => <ExampleRow example={example} />)}
+  </div>
+</div>
+
+<script define:vars={{ cookbookExamples }}>
+  // Use the real examples data passed from the server
+  const examples = cookbookExamples;
+
+  // Filtering functionality
+  let activeSection = null;
+  let activeTag = null;
+
+  // URL parameter management
+  function updateURL() {
+    const url = new URL(window.location.href);
+
+    // Clear existing filter params
+    url.searchParams.delete("section");
+    url.searchParams.delete("tag");
+
+    // Add active filters
+    if (activeSection) {
+      url.searchParams.set("section", activeSection);
+    }
+    if (activeTag) {
+      url.searchParams.set("tag", activeTag);
+    }
+
+    // Update URL without page reload
+    window.history.pushState({}, "", url.toString());
+  }
+
+  function loadFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sectionParam = urlParams.get("section");
+    const tagParam = urlParams.get("tag");
+
+    // Validate section parameter
+    if (sectionParam) {
+      const validSections = examples.flatMap((ex) => ex.sections);
+      if (validSections.includes(sectionParam)) {
+        activeSection = sectionParam;
+      }
+    }
+
+    // Validate tag parameter
+    if (tagParam) {
+      const validTags = examples.flatMap((ex) => ex.tags);
+      if (validTags.includes(tagParam)) {
+        activeTag = tagParam;
+      }
+    }
+  }
+
+  function getFilteredExamples() {
+    return examples.filter((example) => {
+      if (activeSection && !example.sections.includes(activeSection)) {
+        return false;
+      }
+      if (activeTag && !example.tags.includes(activeTag)) {
+        return false;
+      }
+      return true;
+    });
+  }
+
+  function updateTagCounts() {
+    // Calculate tag counts from ALL examples, not filtered ones
+    const allTagCounts = {};
+
+    // Calculate tag counts for ALL examples
+    examples.forEach((example) => {
+      example.tags.forEach((tag) => {
+        allTagCounts[tag] = (allTagCounts[tag] || 0) + 1;
+      });
+    });
+
+    // Update tag button counts and visibility
+    document.querySelectorAll(".filter-tag").forEach((button) => {
+      const tag = button.dataset.tag;
+      const countSpan = button.querySelector(".tag-count");
+      const count = allTagCounts[tag] || 0;
+
+      countSpan.textContent = count.toString();
+
+      // Only hide tags if they don't exist in the full dataset
+      // (This should never happen since tags are generated from the dataset)
+      if (count === 0) {
+        button.style.display = "none";
+      } else {
+        button.style.display = "flex";
+      }
+    });
+
+    // Update "All" tags count to show total examples
+    document.getElementById("all-tags-count").textContent =
+      examples.length.toString();
+  }
+
+  function filterExamples() {
+    const cards = document.querySelectorAll(".example-card");
+    const filteredExamples = getFilteredExamples();
+    let visibleCount = 0;
+
+    cards.forEach((card) => {
+      const cardSections = card.dataset.sections?.split(",") || [];
+      const cardTags = card.dataset.tags?.split(",") || [];
+
+      let showCard = true;
+
+      if (activeSection && !cardSections.includes(activeSection)) {
+        showCard = false;
+      }
+
+      if (activeTag && !cardTags.includes(activeTag)) {
+        showCard = false;
+      }
+
+      if (showCard) {
+        visibleCount++;
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+
+    // Show/hide no results state
+    const noResults = document.getElementById("no-results");
+    const examplesGrid = document.getElementById("examples-grid");
+
+    if (visibleCount === 0) {
+      noResults.classList.remove("hidden");
+      examplesGrid.classList.add("hidden");
+    } else {
+      noResults.classList.add("hidden");
+      examplesGrid.classList.remove("hidden");
+    }
+  }
+
+  function updateButtonStates() {
+    // Reset all buttons to default state
+    document.querySelectorAll(".filter-section, .filter-tag").forEach((btn) => {
+      btn.classList.remove("bg-groq-title", "text-white", "border-groq-title");
+      btn.classList.add(
+        "bg-white",
+        "border-groq-title"
+      ); /* affects the Section buttons */
+      if (btn.classList.contains("filter-tag")) {
+        btn.classList.add("bg-gray-100", "text-gray-700");
+        btn.classList.remove("bg-white");
+      }
+    });
+
+    // Reset "All" buttons to default state
+    document.querySelectorAll(".filter-clear").forEach((btn) => {
+      btn.classList.remove("bg-groq-title", "text-white", "border-groq-title");
+      if (btn.classList.contains("filter-clear-section")) {
+        btn.classList.add("bg-white", "border-gray-200", "text-gray-900");
+      } else if (btn.classList.contains("filter-clear-tag")) {
+        btn.classList.add("bg-gray-100", "text-gray-700");
+      }
+    });
+
+    // Highlight active buttons
+    if (activeSection) {
+      const sectionBtn = document.querySelector(
+        `[data-section="${activeSection}"]`
+      );
+      if (sectionBtn) {
+        sectionBtn.classList.add(
+          "bg-groq-title",
+          "text-white",
+          "border-groq-title"
+        );
+        sectionBtn.classList.remove("bg-white", "border-gray-200");
+      }
+    } else {
+      // Highlight "All" section button when no section is selected
+      const allSectionBtn = document.querySelector(".filter-clear-section");
+      if (allSectionBtn) {
+        allSectionBtn.classList.add(
+          "bg-groq-title",
+          "text-white",
+          "border-groq-title"
+        );
+        allSectionBtn.classList.remove(
+          "bg-white",
+          "border-gray-200",
+          "text-gray-900"
+        );
+      }
+    }
+
+    if (activeTag) {
+      const tagBtn = document.querySelector(`[data-tag="${activeTag}"]`);
+      if (tagBtn) {
+        tagBtn.classList.add("bg-blue-500", "text-white");
+        tagBtn.classList.remove("bg-gray-100", "text-gray-700");
+      }
+    } else {
+      // Highlight "All" tag button when no tag is selected
+      const allTagBtn = document.querySelector(".filter-clear-tag");
+      if (allTagBtn) {
+        // allTagBtn.classList.add('bg-blue-500', 'text-white');
+        // allTagBtn.classList.remove('bg-gray-100', 'text-gray-700');
+      }
+    }
+  }
+
+  function applyFilters() {
+    updateTagCounts();
+    updateButtonStates();
+    filterExamples();
+    updateURL();
+  }
+
+  // Section filter handlers
+  document.querySelectorAll(".filter-section").forEach((button) => {
+    button.addEventListener("click", () => {
+      const section = button.dataset.section || null;
+      activeSection = activeSection === section ? null : section;
+
+      // Reset tag filter when section changes
+      activeTag = null;
+
+      applyFilters();
+    });
+  });
+
+  // Tag filter handlers
+  document.querySelectorAll(".filter-tag").forEach((button) => {
+    button.addEventListener("click", () => {
+      const tag = button.dataset.tag || null;
+      activeTag = activeTag === tag ? null : tag;
+      applyFilters();
+    });
+  });
+
+  // Clear filter handlers
+  document.querySelectorAll(".filter-clear").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeSection = null;
+      activeTag = null;
+      applyFilters();
+    });
+  });
+
+  // Clear all filters button in no results state
+  document
+    .getElementById("clear-all-filters")
+    ?.addEventListener("click", () => {
+      activeSection = null;
+      activeTag = null;
+      applyFilters();
+    });
+
+  // Handle browser back/forward buttons
+  window.addEventListener("popstate", () => {
+    loadFromURL();
+    applyFilters();
+  });
+
+  // Initialize on page load
+  loadFromURL();
+  applyFilters();
+</script>

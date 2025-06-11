@@ -1,0 +1,28 @@
+---
+import UserAvatar from './UserAvatar.astro';
+
+export interface Props {
+  author: {
+    imageUrl: string;
+    username: string;
+  };
+  size?: 'sm' | 'md' | 'lg';
+  textSize?: 'sm' | 'base';
+}
+
+const { author, size = 'sm', textSize = 'sm' } = Astro.props;
+
+const textSizeClasses = {
+  sm: 'text-sm',
+  base: 'text-base'
+};
+---
+
+<div class="flex items-center">
+  <UserAvatar 
+    imageUrl={author.imageUrl} 
+    username={author.username}
+    size={size}
+  />
+  <span class={`text-gray-600 ml-2 ${textSizeClasses[textSize]}`}>by @{author.username}</span>
+</div>

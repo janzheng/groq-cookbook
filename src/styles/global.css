@@ -1,0 +1,402 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-groq-title: #f55036;
+  --color-groq-orange: #f55036;
+  --color-groq-gray: #766f68;
+}
+
+/* Base typography */
+
+:root {
+  --color-groq-title: rgb(245,80,54);
+  --color-groq-orange: #f55036;
+  --color-groq-gray: #766f68;
+  --color-groq-body: #181818;
+}
+.color-groq-title, .text-groq-title {
+  color: var(--color-groq-title);
+}
+.hover\:color-groq-title:hover, .hover\:text-groq-title:hover {
+  color: var(--color-groq-title);
+}
+.border-groq-title, .hover\:border-groq-title:hover {
+  border-color: var(--color-groq-title);
+}
+.bg-groq-title, .hover\:bg-groq-title:hover {
+  background-color: var(--color-groq-title);
+}
+html, body {
+  font-weight: 500;
+  font-family: sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.78;
+  color: var(--color-groq-body);
+}
+
+h1, h2 {
+  font-family: "Montserrat", sans-serif;
+}
+h3, h4, h5, h6 {
+  font-family: "Inter", sans-serif;
+}
+:is(p, ol, ul, pre, code, div) + :is(h3, h4, h5, h6) {
+  margin-top: 3.2rem;
+}
+:is(p, ol, ul, pre, code, div) + :is(h1, h2, ) {
+  margin-top: 6.4rem;
+}
+
+h1 {
+  font-size: 3rem;
+  line-height: 1.2;
+  font-weight: 500;
+  color: var(--color-groq-title);
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  line-height: 1.15;
+  margin-bottom: 1.25rem;
+}
+h2:first-of-type {
+  margin-top: 4rem; /* leading h2 for recipes */
+}
+
+h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.1;
+  margin-top: 2.6rem;
+  margin-bottom: 1.3rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.875rem;
+}
+
+h5 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+/* List styling */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+ul {
+  list-style-type: disc;
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+/* Remove list-style for list items containing checkboxes */
+li:has(input[type="checkbox"]) {
+  list-style: none;
+  margin-left: -1.5rem; /* Compensate for the padding-left on ul/ol */
+  padding-left: 1rem; /* Maintain alignment */
+}
+
+/* Alternative approach if :has() isn't supported */
+li input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+li input[type="checkbox"] + * {
+  /* This targets the content after the checkbox */
+}
+
+/* More specific targeting for your use case */
+ul li:has(input[type="checkbox"]) {
+  list-style-type: none;
+  position: relative;
+  margin-left: -1.5rem;
+  padding-left: 1rem;
+}
+
+/* If you want to style the checkboxes themselves */
+li input[type="checkbox"] {
+  margin-right: 0.75rem;
+  vertical-align: middle;
+}
+
+/* Nested lists */
+ul ul, ol ol, ul ol, ol ul {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+ul ul {
+  list-style-type: circle;
+}
+
+ul ul ul {
+  list-style-type: square;
+}
+
+/* Prose content styling */
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+
+.prose ul, .prose ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.prose blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+th, td {
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+th {
+  background-color: #f9fafb;
+  font-weight: 600;
+}
+
+/* Horizontal rules */
+hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 2rem 0;
+}
+
+/* Links */
+a:not(.button) {
+  color: #2563eb;
+  text-decoration: none;
+}
+a.groq-link {
+  color: var(--color-groq-title) !important;
+}
+a:hover:not(.button):not(.inline-code) {
+  text-decoration: underline;
+}
+
+/* Ensure consistent spacing */
+p {
+  margin-bottom: 1rem;
+}
+
+/* Code blocks maintain readability */
+code, pre {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 0.875rem;
+}
+
+
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
+
+Recipe page
+
+*/
+
+
+/* Code fence container styling */
+.code-fence-container {
+  margin: 1.5rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* .code-fence-header {
+} */
+
+.fence-copy-btn {
+  transition: all 0.2s ease;
+}
+
+.fence-copy-btn:hover {
+  transform: scale(1.05);
+}
+
+.fence-copy-btn:active {
+  transform: scale(0.95);
+}
+
+/* Line numbers styling for Shiki */
+.shiki {
+  position: relative;
+  overflow-x: auto;
+  padding: 1rem !important;
+}
+
+.shiki code {
+  display: block;
+  padding: 0; /* Remove default padding since we're adding it to .shiki */
+  tab-size: 2; /* Reduces tab width */
+}
+
+.shiki .line {
+  display: block;
+  min-height: 0.15rem;
+  line-height: 0.15rem;
+}
+
+.shiki .line-number {
+  display: inline-block;
+  width: 2rem;
+  text-align: right;
+  margin-right: 0.75rem;
+  padding-right: 0.75rem;
+  color: #6b7280;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.shiki .line-content {
+  padding-left: 0rem;
+  display: inline-block;
+  width: calc(100% - 2rem); /* Account for line number width */
+  text-indent: -0.5rem;
+  padding-left: 0.5rem;
+}
+
+/* Make sure line numbers don't get copied */
+.shiki .line-number::selection {
+  background: transparent;
+}
+
+/* Alternative approach for fallback line numbers */
+.shiki.with-line-numbers code .line::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 2.5rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: #6b7280;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+  border-right: 1px solid #374151;
+  padding-right: 0.75rem;
+  margin-right: 1rem;
+}
+
+/* Inline code styling */
+.inline-code {
+  font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas,
+    "Courier New", monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.inline-code:hover {
+  background-color: #d1d5db !important;
+}
+
+.inline-code.copied {
+  background-color: #dcfce7 !important;
+  color: #166534 !important;
+}
+
+/* Remove old inline copy button styles */
+.inline-code-container {
+  display: inline;
+}
+
+/* Prose overrides */
+.prose .code-fence-container {
+  margin: 1.5rem 0;
+}
+
+.prose .inline-code {
+  background: #e5e7eb !important;
+  color: #374151 !important;
+  padding: 0.25rem 0.5rem !important;
+  border-radius: 0.25rem !important;
+  font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas,
+    "Courier New", monospace !important;
+  font-size: 0.875em !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.prose .inline-code:hover {
+  background-color: #d1d5db !important;
+}
+
+.prose .inline-code.copied {
+  background-color: #dcfce7 !important;
+  color: #166534 !important;
+}
+
+.prose .inline-code::before,
+.prose .inline-code::after {
+  content: none !important;
+}

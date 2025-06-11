@@ -1,0 +1,41 @@
+---
+interface Props {
+  example: {
+    id: number;
+    slug: string;
+    title: string;
+    tags: string[];
+    sections: string[];
+  };
+}
+
+const { example } = Astro.props;
+---
+
+<a
+  href={`/recipe/${example.slug}`}
+  class="example-card block py-3 px-4 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200 group"
+  data-tags={example.tags.join(",")}
+  data-sections={example.sections.join(",")}
+>
+  <div class="flex items-center justify-between">
+    <!-- Title on the left -->
+    <div
+      class="font-medium text-gray-900 group-hover:text-groq-title transition-colors"
+    >
+      {example.title}
+    </div>
+
+    <!-- Tags on the right -->
+    <div class="flex flex-wrap gap-1 ml-4">
+      {
+        example.tags.map((tag: string) => (
+          <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md capitalize whitespace-nowrap">
+            {tag}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</a>
+

@@ -1,0 +1,64 @@
+---
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  href: string;
+  size?: 'sm' | 'md' | 'inherit';
+  variant?: 'outline' | 'solid' | 'ghost';
+  text?: string;
+  textClass?: string;
+  icon?: string;
+  iconClass?: string;
+  iconPosition?: 'left' | 'right';
+  svgSrc?: string;
+  svgAlt?: string;
+  target?: '_blank' | '_self'; // Added target prop
+}
+
+const { href, size = 'sm', variant = 'outline', text = 'GitHub', textClass = '', icon = 'mdi:github', iconClass = 'w-6 h-6', iconPosition = 'left', svgSrc, svgAlt = '', target = '_blank' } = Astro.props; // Default to _blank
+
+const sizeClasses = {
+  sm: 'text-sm',
+  md: 'text-base py-2',
+  inherit: 'text-inherit',
+};
+
+const variantClasses = {
+  outline: 'text-gray-500 hover:text-groq-title',
+  solid: 'bg-gray-800 text-white hover:bg-gray-900 rounded-md px-4 py-2',
+  ghost: 'text-gray-500 hover:text-groq-title'
+};
+
+// Check if icon is an SVG string or iconify name
+const isCustomSvg = icon.includes('<svg');
+
+const iconMarginClass = iconPosition === 'left' ? 'mr-1' : 'ml-1';
+---
+
+<button 
+  onclick={`window.open('${href}', '${target}')`} // Use target prop
+  aria-label={text || svgAlt || 'Button'}
+  role="button"
+  tabindex="0"
+  class={`transition-colors duration-200 flex baseline items-center cursor-pointer ${sizeClasses[size]} ${variantClasses[variant]}`}
+>
+  {iconPosition === 'left' && (
+    svgSrc ? (
+      <img src={svgSrc} alt={svgAlt} class={`${iconClass} ${iconMarginClass}`} />
+    ) : isCustomSvg ? (
+      <div class={`${iconClass} ${iconMarginClass}`} set:html={icon} />
+    ) : (
+      <Icon name={icon} class={`${iconClass} ${iconMarginClass}`} />
+    )
+  )}
+  <span class={textClass}>{text}</span>
+  {iconPosition === 'right' && (
+    svgSrc ? (
+      <img src={svgSrc} alt={svgAlt} class={`${iconClass} ${iconMarginClass}`} />
+    ) : isCustomSvg ? (
+      <div class={`${iconClass} ${iconMarginClass}`} set:html={icon} />
+    ) : (
+      <Icon name={icon} class={`${iconClass} ${iconMarginClass}`} />
+    )
+  )}
+</button> 
