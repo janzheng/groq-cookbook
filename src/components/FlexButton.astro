@@ -15,7 +15,7 @@ export interface Props {
   target?: '_blank' | '_self'; // Added target prop
 }
 
-const { href, size = 'sm', variant = 'outline', text = 'GitHub', textClass = '', icon = 'mdi:github', iconClass = 'w-6 h-6', iconPosition = 'left', svgSrc, svgAlt = '', target = '_blank' } = Astro.props; // Default to _blank
+const { href, size = 'sm', variant = 'outline', text = '', textClass = '', icon = 'mdi:github', iconClass = 'w-6 h-6', iconPosition = 'left', svgSrc, svgAlt = '', target = '_blank' } = Astro.props; // Default to _blank
 
 const sizeClasses = {
   sm: 'text-sm',

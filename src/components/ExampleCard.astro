@@ -8,14 +8,27 @@ interface Props {
     slug: string;
     title: string;
     description: string;
+    shortDescription?: string;
     tags: string[];
     sections: string[];
-    author: {
+    author?: {
       username: string;
       imageUrl: string;
     };
-    liveLink?: string;
-    githubLink?: string;
+    authors?: {
+      username: string;
+      imageUrl: string;
+    }[];
+    cta?: {
+      text: string;
+      icon?: string;
+      href: string;
+    };
+    ctas?: {
+      text: string;
+      icon?: string;
+      href: string;
+    }[];
   };
 }
 
@@ -24,33 +37,13 @@ const { example } = Astro.props;
 
 <a
   href={`/recipe/${example.slug}`}
-  class="example-card | button groq-link bg-white rounded-md shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300 block group cursor-pointer flex flex-col h-full"
+  class="example-card | button groq-link bg-white rounded-md shadow-sm overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300 block group cursor-pointer flex flex-col h-full"
   data-tags={example.tags.join(",")}
   data-sections={example.sections.join(",")}
 >
   <div class="px-3 py-3 flex flex-col h-full">
     <!-- Header -->
-    <div class="flex items-start justify-between mb-3">
-      <div
-        class="text-xl mt-2 mb-0 font-semibold text-gray-900 leading-tight group-hover:text-groq transition-colors"
-      >
-        {example.title}
-      </div>
-    </div>
-
-    <!-- Author -->
-    <div class="mb-4">
-      <UserByline author={example.author} />
-    </div>
-
-    <!-- Description -->
-    <p class="text-gray-600 mb-4 leading-relaxed text-sm flex-grow">
-      {example.description}
-    </p>
-
-    <!-- Bottom section with tags and buttons -->
-    <div class="mt-auto">
-      <!-- Tags -->
+    <div class="mb-3">
       <div class="flex flex-wrap gap-2 mb-4">
         {
           example.tags.map((tag: string) => (
@@ -60,33 +53,38 @@ const { example } = Astro.props;
           ))
         }
       </div>
+      <div
+        class="text-xl mt-2 mb-0 font-medium text-gray-900 leading-tight group-hover:text-groq transition-colors"
+      >
+        {example.title}
+      </div>
+    </div>
 
-      <!-- Action buttons -->
+    <!-- Bottom section with author and buttons -->
+    <div class="mt-auto">
       <div class="flex gap-3 items-center">
+        <!-- Author with flex-grow and overflow hidden -->
+        <div class="flex-grow min-w-0 overflow-hidden">
+          <UserByline author={example.author} authors={example.authors} />
+        </div>
+        
+        <!-- Action buttons - flex container for multiple CTAs -->
         {
-          example.liveLink && (
-            <FlexButton
-              href={example.liveLink}
-              size="sm"
-              icon="mdi:play-circle-outline"
-              text="View Demo"
-              variant="ghost"
-            />
-          )
-        }
-
-        {
-          example.githubLink && (
-            <FlexButton
-              href={example.githubLink}
-              size="sm"
-              text="View on GitHub"
-              variant="ghost"
-            />
+          example.ctas && (
+            <div class="flex-shrink-0 flex">
+              {example.ctas.map((cta) => (
+                <FlexButton
+                  href={cta.href}
+                  size="sm"
+                  icon={cta.icon}
+                  text={cta.text}
+                  variant="ghost"
+                />
+              ))}
+            </div>
           )
         }
       </div>
     </div>
   </div>
 </a>
-

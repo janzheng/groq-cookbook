@@ -2,27 +2,65 @@
 import UserAvatar from './UserAvatar.astro';
 
 export interface Props {
-  author: {
+  author?: {
     imageUrl: string;
     username: string;
   };
+  authors?: {
+    imageUrl: string;
+    username: string;
+  }[];
   size?: 'sm' | 'md' | 'lg';
   textSize?: 'sm' | 'base';
+  maxDisplay?: number; // Maximum number of authors to display before showing "and X more"
+  linkToGithub?: boolean; // Whether to link usernames to GitHub profiles
 }
 
-const { author, size = 'sm', textSize = 'sm' } = Astro.props;
+const { author, authors, size = 'sm', textSize = 'sm', maxDisplay = 3, linkToGithub = false } = Astro.props;
+
+// Normalize to always work with an array
+const authorsList = authors || (author ? [author] : []);
 
 const textSizeClasses = {
   sm: 'text-sm',
   base: 'text-base'
 };
+
+// Determine how many authors to show and if we need "and X more"
+const displayAuthors = authorsList.slice(0, maxDisplay);
+const remainingCount = Math.max(0, authorsList.length - maxDisplay);
 ---
 
 <div class="flex items-center">
-  <UserAvatar 
-    imageUrl={author.imageUrl} 
-    username={author.username}
-    size={size}
-  />
-  <span class={`text-gray-600 ml-2 ${textSizeClasses[textSize]}`}>by @{author.username}</span>
+  <!-- Display author avatars -->
+  <div class="flex -space-x-1">
+    {displayAuthors.map((authorItem) => (
+      <UserAvatar 
+        imageUrl={authorItem.imageUrl} 
+        username={authorItem.username}
+        size={size}
+      />
+    ))}
+  </div>
+  
+  <!-- Display author names -->
+  <span class={`text-gray-600 ml-2 ${textSizeClasses[textSize]} truncate min-w-0`}>
+    by 
+    {displayAuthors.map((authorItem, index) => (
+      <span>
+        {linkToGithub ? (
+          <a href={`https://github.com/${authorItem.username}`} target="_blank" class="inline hover:text-groq transition-colors">
+            {authorItem.username}
+          </a>
+        ) : (
+          <span class="inline">
+            {authorItem.username}
+          </span>
+        )}{index < displayAuthors.length - 1 ? ', ' : ''}
+      </span>
+    ))}
+    {remainingCount > 0 && (
+      <span> and {remainingCount} more</span>
+    )}
+  </span>
 </div>

@@ -3,11 +3,11 @@ export const prerender = false;
 
 import groqning from "../../assets/groqning.svg";
 import Layout from "../../layouts/Layout.astro";
-import Sidebar from "../../components/Sidebar.astro";
+import RecipesSidebar from "../../components/RecipesSidebar.astro";
 import UserByline from "../../components/UserByline.astro";
-import DemoButton from "../../components/DemoButton.astro";
 import FlexButton from "../../components/FlexButton.astro";
 import { processMarkdownWithCodeBlocks } from "../../utils/codeBlockProcessor";
+import { processMDXContent } from "../../utils/mdxProcessor";
 
 import { Icon } from "astro-icon/components";
 
@@ -33,14 +33,23 @@ allExamples.forEach((example: any) => {
     if (!examplesBySection[section]) {
       examplesBySection[section] = [];
     }
-    examplesBySection[section].push(example);
+    // Only add if not already in this section (avoid duplicates)
+    if (!examplesBySection[section].find(ex => ex.slug === example.slug)) {
+      examplesBySection[section].push(example);
+    }
   });
 });
 
-// Process markdown content with code blocks
-const htmlContent = await processMarkdownWithCodeBlocks(
-  recipeData.readmeContent || ""
-);
+// Get the raw content
+const rawContent = recipeData.readmeContent || recipeData.markdown || "";
+
+// Check if content contains component syntax
+const hasComponents = /<\w+([^>]*?)\/>/g.test(rawContent);
+
+// Process content appropriately
+const htmlContent = hasComponents 
+  ? await processMDXContent(rawContent)
+  : await processMarkdownWithCodeBlocks(rawContent);
 ---
 
 <Layout>
@@ -50,12 +59,12 @@ const htmlContent = await processMarkdownWithCodeBlocks(
   </Fragment>
 
   <body class="bg-gray-50">
-    <div class="">
+    <div class="flex min-h-screen">
       <!-- Left Sidebar TOC -->
-      <!-- <Sidebar currentSlug={slug} examplesBySection={examplesBySection} /> -->
+      <RecipesSidebar currentSlug={slug} examplesBySection={examplesBySection} asideClass="mt-8 top-0 sticky" />
 
       <!-- Main Content -->
-      <main class="">
+      <main class="flex-1">
         <div class="max-w-4xl mx-auto px-8 py-8">
           <!-- Recipe Header -->
           <header class="mt-8 mb-8">
@@ -83,7 +92,16 @@ const htmlContent = await processMarkdownWithCodeBlocks(
 
             <!-- Recipe Meta -->
             <div class="flex items-center gap-6 text-sm text-gray-500 mb-6">
-              {recipeData.author && <UserByline author={recipeData.author} />}
+              {
+                (recipeData.author || recipeData.authors) && (
+                  <UserByline
+                    author={recipeData.author}
+                    linkToGithub={true}
+                    authors={recipeData.authors}
+                    size="lg"
+                  />
+                )
+              }
               {
                 recipeData.date && (
                   <span>
@@ -95,7 +113,7 @@ const htmlContent = await processMarkdownWithCodeBlocks(
                   </span>
                 )
               }
-              <div class="flex gap-3">
+              <div class="flex gap-6">
                 {
                   recipeData.githubLink && (
                     <FlexButton
@@ -106,16 +124,24 @@ const htmlContent = await processMarkdownWithCodeBlocks(
                     />
                   )
                 }
-              </div>
-
-              <div class="flex gap-3">
                 {
-                  true && (
+                  recipeData.githubLink && (
                     <FlexButton
                       href={recipeData.githubLink}
                       size="inherit"
                       icon="mdi:play-circle-outline"
                       text="View Demo"
+                      variant="ghost"
+                    />
+                  )
+                }
+                {
+                  recipeData.ipynbLink && (
+                    <FlexButton
+                      href={`https://colab.research.google.com/github/${recipeData.ipynbLink.replace('https://github.com/', '')}`}
+                      size="inherit"
+                      icon="mdi:language-python"
+                      text="View Notebook in Colab"
                       variant="ghost"
                     />
                   )
@@ -128,9 +154,9 @@ const htmlContent = await processMarkdownWithCodeBlocks(
               recipeData.tags && recipeData.tags.length > 0 && (
                 <div class="flex flex-wrap gap-2">
                   {recipeData.tags.map((tag: string) => (
-                    <a 
+                    <a
                       href={`/?tag=${encodeURIComponent(tag)}`}
-                      class="button hover:bg-gray-200 px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full capitalize transition-colors duration-200 cursor-pointer"
+                      class="button hover:bg-groq-100 px-3 py-1 bg-gray-100 text-gray-700 hover:text-groq-800 text-sm rounded-full capitalize transition-colors duration-200 cursor-pointer"
                     >
                       {tag}
                     </a>
