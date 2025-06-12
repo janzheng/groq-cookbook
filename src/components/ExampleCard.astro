@@ -1,6 +1,6 @@
 ---
-import UserByline from './UserByline.astro';
-import FlexButton from './FlexButton.astro';
+import UserByline from "./UserByline.astro";
+import FlexButton from "./FlexButton.astro";
 
 interface Props {
   example: {
@@ -22,16 +22,18 @@ interface Props {
 const { example } = Astro.props;
 ---
 
-<a 
+<a
   href={`/recipe/${example.slug}`}
-  class="button groq-link example-card bg-white rounded-md shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300 block group cursor-pointer flex flex-col h-full"
-  data-tags={example.tags.join(',')}
-  data-sections={example.sections.join(',')}
+  class="example-card | button groq-link bg-white rounded-md shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300 block group cursor-pointer flex flex-col h-full"
+  data-tags={example.tags.join(",")}
+  data-sections={example.sections.join(",")}
 >
   <div class="px-3 py-3 flex flex-col h-full">
     <!-- Header -->
     <div class="flex items-start justify-between mb-3">
-      <div class="text-xl mt-2 mb-0 font-semibold text-gray-900 leading-tight group-hover:text-groq-title transition-colors">
+      <div
+        class="text-xl mt-2 mb-0 font-semibold text-gray-900 leading-tight group-hover:text-groq transition-colors"
+      >
         {example.title}
       </div>
     </div>
@@ -50,34 +52,41 @@ const { example } = Astro.props;
     <div class="mt-auto">
       <!-- Tags -->
       <div class="flex flex-wrap gap-2 mb-4">
-        {example.tags.map((tag: string) => (
-          <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md capitalize">
-            {tag}
-          </span>
-        ))}
+        {
+          example.tags.map((tag: string) => (
+            <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md capitalize">
+              {tag}
+            </span>
+          ))
+        }
       </div>
 
       <!-- Action buttons -->
       <div class="flex gap-3 items-center">
-        {example.liveLink && (
-          <FlexButton 
-            href={example.liveLink}
-            size="sm"
-            icon="mdi:play-circle-outline"
-            text="View Demo"
-            variant="ghost"
-          />
-        )}
-        
-        {example.githubLink && (
-          <FlexButton 
-            href={example.githubLink}
-            size="sm"
-            text="View on GitHub"
-            variant="ghost"
-          />
-        )}
+        {
+          example.liveLink && (
+            <FlexButton
+              href={example.liveLink}
+              size="sm"
+              icon="mdi:play-circle-outline"
+              text="View Demo"
+              variant="ghost"
+            />
+          )
+        }
+
+        {
+          example.githubLink && (
+            <FlexButton
+              href={example.githubLink}
+              size="sm"
+              text="View on GitHub"
+              variant="ghost"
+            />
+          )
+        }
       </div>
     </div>
   </div>
-</a> 
+</a>
+

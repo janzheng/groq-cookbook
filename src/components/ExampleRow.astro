@@ -14,14 +14,14 @@ const { example } = Astro.props;
 
 <a
   href={`/recipe/${example.slug}`}
-  class="example-card block py-3 px-4 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200 group"
+  class="example-card | button groq-link block py-3 px-4 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200 group"
   data-tags={example.tags.join(",")}
   data-sections={example.sections.join(",")}
 >
   <div class="flex items-center justify-between">
     <!-- Title on the left -->
     <div
-      class="font-medium text-gray-900 group-hover:text-groq-title transition-colors"
+      class="font-medium text-gray-900 group-hover:text-groq transition-colors"
     >
       {example.title}
     </div>
@@ -38,4 +38,3 @@ const { example } = Astro.props;
     </div>
   </div>
 </a>
-

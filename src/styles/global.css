@@ -4,31 +4,27 @@
 @import "tailwindcss";
 
 @theme {
-  --color-groq-title: #f55036;
-  --color-groq-orange: #f55036;
+  --color-groq: #f55036;
+  --color-groq-50: #fff5f3;
+  --color-groq-100: #ffe8e5;
+  --color-groq-200: #ffd0cb;
+  --color-groq-300: #ffaba3;
+  --color-groq-400: #ff7966;
+  --color-groq-500: #ff5036;
+  --color-groq-600: #e0432e;
+  --color-groq-700: #c33825;
+  --color-groq-800: #a12d1d;
+  --color-groq-900: #7a2115;
+  --color-groq-950: #4f130c;
   --color-groq-gray: #766f68;
 }
 
 /* Base typography */
 
 :root {
-  --color-groq-title: rgb(245,80,54);
-  --color-groq-orange: #f55036;
-  --color-groq-gray: #766f68;
   --color-groq-body: #181818;
 }
-.color-groq-title, .text-groq-title {
-  color: var(--color-groq-title);
-}
-.hover\:color-groq-title:hover, .hover\:text-groq-title:hover {
-  color: var(--color-groq-title);
-}
-.border-groq-title, .hover\:border-groq-title:hover {
-  border-color: var(--color-groq-title);
-}
-.bg-groq-title, .hover\:bg-groq-title:hover {
-  background-color: var(--color-groq-title);
-}
+
 html, body {
   font-weight: 500;
   font-family: sans-serif;
@@ -54,7 +50,7 @@ h1 {
   font-size: 3rem;
   line-height: 1.2;
   font-weight: 500;
-  color: var(--color-groq-title);
+  color: var(--color-groq);
   margin-bottom: 1.5rem;
 }
 
@@ -216,11 +212,16 @@ hr {
 
 /* Links */
 a:not(.button) {
-  color: #2563eb;
-  text-decoration: none;
+  color: inherit;
+  text-decoration: underline;
+}
+a:not(.button):not(.inline-code):hover {
+  color: var(--color-groq);
+  transition: color 0.2s ease;
+  text-decoration: underline;
 }
 a.groq-link {
-  color: var(--color-groq-title) !important;
+  color: var(--color-groq) !important;
 }
 a:hover:not(.button):not(.inline-code) {
   text-decoration: underline;

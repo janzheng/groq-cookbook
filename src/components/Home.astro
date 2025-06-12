@@ -15,7 +15,9 @@ const response = await fetch(`${Astro.url.origin}/api/examples`);
 const cookbookExamples = await response.json();
 
 // Filter featured examples
-const featuredExamples = cookbookExamples.filter((example: any) => example.featured);
+const featuredExamples = cookbookExamples.filter(
+  (example: any) => example.featured
+);
 
 // Calculate section counts (only for whitelisted sections, or all if whitelist is empty)
 const sectionCounts: Record<string, number> = {};
@@ -51,16 +53,20 @@ cookbookExamples.forEach((example: any) => {
   </div>
 
   <!-- Featured Examples -->
-  {featuredExamples.length > 0 && (
-    <div class="mb-16">
-      <h2 class="text-2xl font-semibold text-gray-800 mb-8 text-center">⭐ Featured Recipes</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        {featuredExamples.map((example: any) => (
-          <ExampleCard example={example} />
-        ))}
+  {
+    featuredExamples.length > 0 && (
+      <div class="mb-16">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-8 text-center">
+          ⭐ Featured Recipes
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {featuredExamples.map((example: any) => (
+            <ExampleCard example={example} />
+          ))}
+        </div>
       </div>
-    </div>
-  )}
+    )
+  }
 
   <!-- Tags -->
   <div class="mb-12">
@@ -74,7 +80,7 @@ cookbookExamples.forEach((example: any) => {
         {
           Object.entries(sectionCounts).map(([section, count]) => (
             <button
-              class="cursor-pointer px-6 py-1 text-gray-900 hover:text-gray-900 bg-white border hover:border-blue-500 hover:bg-red-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 items-center filter-section"
+              class="cursor-pointer px-6 py-1 text-gray-900 hover:text-gray-900 bg-white border hover:border-groq-500 hover:bg-red-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 items-center filter-section"
               data-section={section}
             >
               <span class="text-md font-600 capitalize">{section}</span>
@@ -82,7 +88,7 @@ cookbookExamples.forEach((example: any) => {
           ))
         }
         <button
-          class="cursor-pointer px-8 py-1 text-gray-900 hover:text-gray-900 bg-white border hover:border-blue-500 hover:bg-red-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 items-center filter-section"
+          class="cursor-pointer px-8 py-1 text-gray-900 hover:text-gray-900 bg-white border hover:border-groq-500 hover:bg-red-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 items-center filter-section"
         >
           <span class="text-md">All</span>
           <!-- <span class="text-sm mt-1">{cookbookExamples.length}</span> -->
@@ -93,7 +99,7 @@ cookbookExamples.forEach((example: any) => {
       {
         Object.entries(tagCounts).map(([tag, count]) => (
           <button
-            class="cursor-pointer px-4 py-2 bg-gray-100 hover:bg-blue-100 text-gray-700 hover:text-blue-800 rounded-full text-sm font-medium transition-colors duration-200 flex items-center gap-2 filter-tag"
+            class="cursor-pointer px-4 py-2 bg-gray-100 hover:bg-groq-100 text-gray-700 hover:text-groq-800 rounded-full text-sm font-medium transition-colors duration-200 flex items-center gap-2 filter-tag"
             data-tag={tag}
           >
             <span class="capitalize">{tag}</span>
@@ -104,7 +110,7 @@ cookbookExamples.forEach((example: any) => {
         ))
       }
       <button
-        class="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 hover:text-white rounded-full text-sm font-medium transition-colors duration-200 flex items-center gap-2 filter-clear filter-clear-tag"
+        class="px-4 py-2 bg-groq-500 text-white hover:bg-groq-600 hover:text-white rounded-full text-sm font-medium transition-colors duration-200 flex items-center gap-2 filter-clear filter-clear-tag"
       >
         <span>All</span>
         <span
@@ -129,7 +135,7 @@ cookbookExamples.forEach((example: any) => {
       </p>
       <button
         id="clear-all-filters"
-        class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium"
+        class="px-6 py-3 bg-groq-500 text-white rounded-lg hover:bg-groq-600 transition-colors duration-200 font-medium"
       >
         Clear All Filters
       </button>
@@ -241,8 +247,8 @@ cookbookExamples.forEach((example: any) => {
   }
 
   function filterExamples() {
-    const cards = document.querySelectorAll(".example-card");
-    const filteredExamples = getFilteredExamples();
+    // Only target example cards within the examples-grid (not featured examples)
+    const cards = document.querySelectorAll("#examples-grid .example-card");
     let visibleCount = 0;
 
     cards.forEach((card) => {
@@ -283,10 +289,10 @@ cookbookExamples.forEach((example: any) => {
   function updateButtonStates() {
     // Reset all buttons to default state
     document.querySelectorAll(".filter-section, .filter-tag").forEach((btn) => {
-      btn.classList.remove("bg-groq-title", "text-white", "border-groq-title");
+      btn.classList.remove("bg-groq-500", "text-white", "border-groq-500");
       btn.classList.add(
         "bg-white",
-        "border-groq-title"
+        "border-groq-500"
       ); /* affects the Section buttons */
       if (btn.classList.contains("filter-tag")) {
         btn.classList.add("bg-gray-100", "text-gray-700");
@@ -296,7 +302,7 @@ cookbookExamples.forEach((example: any) => {
 
     // Reset "All" buttons to default state
     document.querySelectorAll(".filter-clear").forEach((btn) => {
-      btn.classList.remove("bg-groq-title", "text-white", "border-groq-title");
+      btn.classList.remove("bg-groq-500", "text-white", "border-groq-500");
       if (btn.classList.contains("filter-clear-section")) {
         btn.classList.add("bg-white", "border-gray-200", "text-gray-900");
       } else if (btn.classList.contains("filter-clear-tag")) {
@@ -310,22 +316,14 @@ cookbookExamples.forEach((example: any) => {
         `[data-section="${activeSection}"]`
       );
       if (sectionBtn) {
-        sectionBtn.classList.add(
-          "bg-groq-title",
-          "text-white",
-          "border-groq-title"
-        );
+        sectionBtn.classList.add("bg-groq-500", "text-white", "border-groq-500");
         sectionBtn.classList.remove("bg-white", "border-gray-200");
       }
     } else {
       // Highlight "All" section button when no section is selected
       const allSectionBtn = document.querySelector(".filter-clear-section");
       if (allSectionBtn) {
-        allSectionBtn.classList.add(
-          "bg-groq-title",
-          "text-white",
-          "border-groq-title"
-        );
+        allSectionBtn.classList.add("bg-groq-500", "text-white", "border-groq-500");
         allSectionBtn.classList.remove(
           "bg-white",
           "border-gray-200",
@@ -337,15 +335,8 @@ cookbookExamples.forEach((example: any) => {
     if (activeTag) {
       const tagBtn = document.querySelector(`[data-tag="${activeTag}"]`);
       if (tagBtn) {
-        tagBtn.classList.add("bg-blue-500", "text-white");
+        tagBtn.classList.add("bg-groq-500", "text-white");
         tagBtn.classList.remove("bg-gray-100", "text-gray-700");
-      }
-    } else {
-      // Highlight "All" tag button when no tag is selected
-      const allTagBtn = document.querySelector(".filter-clear-tag");
-      if (allTagBtn) {
-        // allTagBtn.classList.add('bg-blue-500', 'text-white');
-        // allTagBtn.classList.remove('bg-gray-100', 'text-gray-700');
       }
     }
   }
