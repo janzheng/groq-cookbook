@@ -1,7 +1,7 @@
 export const cookbookExamples = [
   {
     id: 1,
-    featured: true,
+    featured: false,
     slug: "portkey-with-groq",
     title: "Portkey with Groq",
     language: "python",
@@ -29,7 +29,7 @@ export const cookbookExamples = [
   },
   {
     id: 2,
-    featured: true,
+    featured: false,
     slug: "website-guru",
     title: "Website Guru",
     language: "python",
@@ -58,7 +58,7 @@ export const cookbookExamples = [
   },
   {
     id: 3,
-    featured: true,
+    featured: false,
     slug: "llama-guard-safe-chatbot",
     title: "Ensuring Safe User Interactions in Chatbots",
     language: "python",
@@ -213,7 +213,7 @@ The examples shown demonstrate how easy it is to implement content filtering whi
   },
   {
     id: 4,
-    featured: true,
+    featured: false,
     slug: "parallel-tool-use",
     title: "Parallel Tool Use",
     language: "python",
@@ -891,7 +891,6 @@ The approach shows that by leveraging the collective strengths of multiple model
       }
     ]
   },
-  
 ]
 
 
