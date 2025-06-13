@@ -220,7 +220,7 @@ const { tagCounts, totalExamples, asideClass } = Astro.props;
         const cardTags = card.dataset.tags?.split(",") || [];
         let showCard = true;
 
-        if (this.activeTag && !cardtags?.includes(this.activeTag)) {
+        if (this.activeTag && !cardTags?.includes(this.activeTag)) {
           showCard = false;
         }
 
