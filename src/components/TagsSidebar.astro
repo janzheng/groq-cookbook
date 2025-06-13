@@ -31,7 +31,7 @@ const { tagCounts, totalExamples, asideClass } = Astro.props;
         <input
           type="text"
           id="tag-search"
-          placeholder="Search tags..."
+          placeholder="Search tags?..."
           class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-groq focus:border-groq text-sm"
         />
       </div>
@@ -220,7 +220,7 @@ const { tagCounts, totalExamples, asideClass } = Astro.props;
         const cardTags = card.dataset.tags?.split(",") || [];
         let showCard = true;
 
-        if (this.activeTag && !cardTags.includes(this.activeTag)) {
+        if (this.activeTag && !cardtags?.includes(this.activeTag)) {
           showCard = false;
         }
 

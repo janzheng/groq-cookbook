@@ -29,12 +29,12 @@ const allExamples = await examplesResponse.json();
 // Group examples by section
 const examplesBySection: Record<string, any[]> = {};
 allExamples.forEach((example: any) => {
-  example.sections.forEach((section: string) => {
+  example.sections?.forEach((section: string) => {
     if (!examplesBySection[section]) {
       examplesBySection[section] = [];
     }
     // Only add if not already in this section (avoid duplicates)
-    if (!examplesBySection[section].find(ex => ex.slug === example.slug)) {
+    if (!examplesBySection[section].find((ex) => ex.slug === example.slug)) {
       examplesBySection[section].push(example);
     }
   });
@@ -47,7 +47,7 @@ const rawContent = recipeData.readmeContent || recipeData.markdown || "";
 const hasComponents = /<\w+([^>]*?)\/>/g.test(rawContent);
 
 // Process content appropriately
-const htmlContent = hasComponents 
+const htmlContent = hasComponents
   ? await processMDXContent(rawContent)
   : await processMarkdownWithCodeBlocks(rawContent);
 ---
@@ -61,7 +61,11 @@ const htmlContent = hasComponents
   <body class="bg-gray-50">
     <div class="flex min-h-screen">
       <!-- Left Sidebar TOC -->
-      <RecipesSidebar currentSlug={slug} examplesBySection={examplesBySection} asideClass="mt-8 top-0 sticky" />
+      <RecipesSidebar
+        currentSlug={slug}
+        examplesBySection={examplesBySection}
+        asideClass="mt-8 top-0 sticky"
+      />
 
       <!-- Main Content -->
       <main class="flex-1">
@@ -91,7 +95,7 @@ const htmlContent = hasComponents
             }
 
             <!-- Recipe Meta -->
-            <div class="flex items-center gap-6 text-sm text-gray-500 mb-6">
+            <div class="flex items-center gap-4 text-sm text-gray-500 mb-6">
               {
                 (recipeData.author || recipeData.authors) && (
                   <UserByline
@@ -99,6 +103,8 @@ const htmlContent = hasComponents
                     linkToGithub={true}
                     authors={recipeData.authors}
                     size="lg"
+                    className="max-w-64"
+                    avatarClassName="-space-x-6"
                   />
                 )
               }
@@ -113,13 +119,13 @@ const htmlContent = hasComponents
                   </span>
                 )
               }
-              <div class="flex gap-6">
+              <div class="flex gap-4">
                 {
                   recipeData.githubLink && (
                     <FlexButton
                       href={recipeData.githubLink}
                       size="inherit"
-                      text="View on GitHub"
+                      text="GitHub"
                       variant="ghost"
                     />
                   )
@@ -130,7 +136,7 @@ const htmlContent = hasComponents
                       href={recipeData.githubLink}
                       size="inherit"
                       icon="mdi:play-circle-outline"
-                      text="View Demo"
+                      text="Demo"
                       variant="ghost"
                     />
                   )
@@ -138,10 +144,10 @@ const htmlContent = hasComponents
                 {
                   recipeData.ipynbLink && (
                     <FlexButton
-                      href={`https://colab.research.google.com/github/${recipeData.ipynbLink.replace('https://github.com/', '')}`}
+                      href={`https://colab.research.google.com/github/${recipeData.ipynbLink.replace("https://github.com/", "")}`}
                       size="inherit"
                       icon="mdi:language-python"
-                      text="View Notebook in Colab"
+                      text="Colab"
                       variant="ghost"
                     />
                   )
@@ -151,12 +157,12 @@ const htmlContent = hasComponents
 
             <!-- Tags -->
             {
-              recipeData.tags && recipeData.tags.length > 0 && (
+              recipeData.tags && recipeData.tags?.length > 0 && (
                 <div class="flex flex-wrap gap-2">
-                  {recipeData.tags.map((tag: string) => (
+                  {recipeData.tags?.map((tag: string) => (
                     <a
                       href={`/?tag=${encodeURIComponent(tag)}`}
-                      class="button hover:bg-groq-100 px-3 py-1 bg-gray-100 text-gray-700 hover:text-groq-800 text-sm rounded-full capitalize transition-colors duration-200 cursor-pointer"
+                      class="button hover:bg-groq-100 px-3 py-1 bg-gray-100 text-gray-700 hover:text-groq-800 text-sm rounded-full transition-colors duration-200 cursor-pointer"
                     >
                       {tag}
                     </a>

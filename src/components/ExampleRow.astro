@@ -1,4 +1,6 @@
 ---
+import FlexButton from "./FlexButton.astro";
+
 interface Props {
   example: {
     id: number;
@@ -6,31 +8,70 @@ interface Props {
     title: string;
     tags: string[];
     sections: string[];
+    cta?: {
+      text: string;
+      icon?: string;
+      href: string;
+      useColab?: boolean;
+    };
+    ctas?: {
+      text: string;
+      icon?: string;
+      href: string;
+      useColab?: boolean;
+    }[];
   };
 }
 
 const { example } = Astro.props;
+
+// Helper function to convert GitHub notebook URLs to Colab URLs
+function getColabUrl(href: string): string {
+  if (href.includes('github.com') && href.includes('.ipynb')) {
+    return `https://colab.research.google.com/github/${href.split('github.com/')[1]}`;
+  }
+  return href;
+}
 ---
 
 <a
   href={`/recipe/${example.slug}`}
   class="example-card | button groq-link block py-3 px-4 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200 group"
-  data-tags={example.tags.join(",")}
-  data-sections={example.sections.join(",")}
+  data-tags={example.tags?.join(",")}
+  data-sections={example.sections?.join(",")}
 >
   <div class="flex items-center justify-between">
-    <!-- Title on the left -->
-    <div
-      class="font-medium text-gray-900 group-hover:text-groq transition-colors"
-    >
-      {example.title}
+    <!-- Title and CTAs on the left -->
+    <div class="flex items-center gap-3 flex-grow min-w-0">
+      <div
+        class="font-medium text-gray-900 group-hover:text-groq transition-colors"
+      >
+        {example.title}
+      </div>
+      
+      <!-- CTAs inline with title -->
+      {
+        example.ctas && (
+          <div class="flex-shrink-0 flex gap-1">
+            {example.ctas.map((cta) => (
+              <FlexButton
+                href={cta.useColab ? getColabUrl(cta.href) : cta.href}
+                size="sm"
+                icon={cta.icon}
+                text={cta.text}
+                variant="ghost"
+              />
+            ))}
+          </div>
+        )
+      }
     </div>
 
     <!-- Tags on the right -->
     <div class="flex flex-wrap gap-1 ml-4">
       {
-        example.tags.map((tag: string) => (
-          <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md capitalize whitespace-nowrap">
+        example.tags?.map((tag: string) => (
+          <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md whitespace-nowrap">
             {tag}
           </span>
         ))

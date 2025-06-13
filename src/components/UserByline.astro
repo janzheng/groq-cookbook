@@ -2,6 +2,8 @@
 import UserAvatar from './UserAvatar.astro';
 
 export interface Props {
+  className?: string;
+  avatarClassName?: string;
   author?: {
     imageUrl: string;
     username: string;
@@ -16,7 +18,7 @@ export interface Props {
   linkToGithub?: boolean; // Whether to link usernames to GitHub profiles
 }
 
-const { author, authors, size = 'sm', textSize = 'sm', maxDisplay = 3, linkToGithub = false } = Astro.props;
+const { author, authors, size = 'sm', textSize = 'sm', maxDisplay = 3, linkToGithub = false, className, avatarClassName = '-space-x-2' } = Astro.props;
 
 // Normalize to always work with an array
 const authorsList = authors || (author ? [author] : []);
@@ -31,9 +33,9 @@ const displayAuthors = authorsList.slice(0, maxDisplay);
 const remainingCount = Math.max(0, authorsList.length - maxDisplay);
 ---
 
-<div class="flex items-center">
+<div class={`flex items-center gap-4 ${className}`}>
   <!-- Display author avatars -->
-  <div class="flex -space-x-1">
+  <div class={`flex ${avatarClassName}`}>
     {displayAuthors.map((authorItem) => (
       <UserAvatar 
         imageUrl={authorItem.imageUrl} 
@@ -44,18 +46,14 @@ const remainingCount = Math.max(0, authorsList.length - maxDisplay);
   </div>
   
   <!-- Display author names -->
-  <span class={`text-gray-600 ml-2 ${textSizeClasses[textSize]} truncate min-w-0`}>
+  <span class={`text-gray-600 ${textSizeClasses[textSize]} truncate min-w-0`}>
     by 
     {displayAuthors.map((authorItem, index) => (
       <span>
         {linkToGithub ? (
-          <a href={`https://github.com/${authorItem.username}`} target="_blank" class="inline hover:text-groq transition-colors">
-            {authorItem.username}
-          </a>
+          <a href={`https://github.com/${authorItem.username}`} target="_blank" class="inline hover:text-groq transition-colors">{authorItem.username}</a>
         ) : (
-          <span class="inline">
-            {authorItem.username}
-          </span>
+          <span class="inline">{authorItem.username}</span>
         )}{index < displayAuthors.length - 1 ? ', ' : ''}
       </span>
     ))}

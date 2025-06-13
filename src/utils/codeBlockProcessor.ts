@@ -74,7 +74,7 @@ export class CodeBlockProcessor {
         }).join('\n');
         
         this.codeBlocks.set(id, {
-          html: `<pre class="shiki github-light"><code class="language-${language}">${numberedLines}</code></pre>`,
+          html: `<pre class="shiki github-"><code class="language-${language}">${numberedLines}</code></pre>`,
           language,
           code
         });
