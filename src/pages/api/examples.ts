@@ -761,7 +761,7 @@ By following good data governance practices and gradually building your library 
       },
     ],
     difficulty: "intermediate",
-    tags: ["sql"],
+    tags: ["SQL"],
     sections: ["SQL"],
     date: "2024-08-26",
     authors: [{
